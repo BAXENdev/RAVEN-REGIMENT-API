@@ -31,7 +31,9 @@ def default_func():
 def get_status():
 	print(f'Request: {request.remote_addr} /status')
 	if not (update_status()):
-		return "Not Ok", 404
+		return jsonify({"status": "Stopped"})
+	if missionStatus["map"] == "":
+		return jsonify({"status": "Starting", "modsetName": "RR Custom Mods"})
 	return jsonify(missionStatus)
 
 @app.route('/missions', methods=['GET'])
