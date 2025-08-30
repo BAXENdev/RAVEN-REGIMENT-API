@@ -23,7 +23,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir flask gunicorn
 
 # Run your app with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:61611", "api:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT api:app
 
 STOPSIGNAL SIGINT
 

@@ -24,6 +24,7 @@ mission = {
 }
 
 @app.route('/')
+@app.route('/health')
 def default_func():
 	return "ok", 200
 

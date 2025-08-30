@@ -1,0 +1,22 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: raven-a3-api
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"    # minimum instances
+        autoscaling.knative.dev/maxScale: "1"    # maximum instances
+    spec:
+      timeoutSeconds: 150
+      containerConcurrency: 80                  # matches your previous concurrency setting
+      containers:
+        - image: europe-west1-docker.pkg.dev/ravens-regiment/cloud-run-source-deploy/raven-a3-api:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          env:
+            - name: DEBUG
+              value: "false"
