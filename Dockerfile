@@ -9,6 +9,7 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+ && pip install requests \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 

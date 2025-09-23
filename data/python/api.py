@@ -4,6 +4,7 @@ from datetime import datetime
 import subprocess
 import os
 import json
+import requests
 
 app = Flask(__name__)
 #app.logger.setLevel(logging.DEBUG)
@@ -34,7 +35,7 @@ def get_status():
 	if not (update_status()):
 		return jsonify({"status": "Stopped"})
 	if missionStatus["map"] == "":
-		return jsonify({"status": "Starting", "modsetName": "RR Custom Mods"})
+		return jsonify({"status": "Starting", "modsetName": missionStatus["modsetName"]})
 	return jsonify(missionStatus)
 
 @app.route('/missions', methods=['GET'])
@@ -55,6 +56,15 @@ def update_status():
 	if result.returncode != 0:
 		return False
 
+	modsetName = "RR Modpack"
+	try:
+		response = requests.get("https://ravens-regiment.com/modset.html", timeout=2)
+		response.raise_for_status()
+		if len(response.text) < 20:
+			modsetName = response.text
+	except:
+		pass
+
 	output = result.stdout
 	json_output = json.loads(output)
 	mission["title"] = json_output["game"]
@@ -63,6 +73,7 @@ def update_status():
 	missionStatus["map"] = json_output["map"]
 	missionStatus["players"] = int(json_output["players"])
 	missionStatus["playersMax"] = int(json_output["max_players"])
+	missionStatus["modsetName"] = modsetName
 	return True
 
 
